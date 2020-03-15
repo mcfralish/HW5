@@ -146,6 +146,8 @@ public class Bank {
 		System.out.println();
 		System.out.println("The account with the lowest balance:");
 		System.out.println(accts[mini]);
+		
+		sc.close();
 	}
 
 }
