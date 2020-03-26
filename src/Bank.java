@@ -13,9 +13,7 @@ public class Bank {
 		
 		Scanner sc = new Scanner(System.in);
 		int numOfAccount;
-		String PID;
-		String abc;
-		
+		String PID;		
 		
 		System.out.println("Welcome to the banking program. How many accounts will you be opening today?");
 		numOfAccount = sc.nextInt();
@@ -27,8 +25,12 @@ public class Bank {
 			numOfAccount = sc.nextInt();
 		}
 		
-		// Creates array of PaypalAccount Objects
+		// Creates array of PaypalAccount Objects with random account balances and ascending account number order
 		PaypalAccount[] accts = new PaypalAccount[numOfAccount];
+		for(int i=0;i<accts.length;i++) {
+			double balance = Math.random()*1000;
+			accts[i] = new PaypalAccount(balance);
+		}
 		
 		// Gives the user an option to use their own PID or mine
 		System.out.println();
@@ -37,7 +39,7 @@ public class Bank {
 		System.out.println("2 User");
 		int answer = sc.nextInt();
 		
-		// Catches input errors this question
+		// Catches input errors for this question
 		while(answer>2||answer<1) {
 			System.out.println("That is not a valid answer.");
 			System.out.println("1 Programmer");
@@ -77,27 +79,34 @@ public class Bank {
 		}
 		
 		// Determines acct number and balance based off of PID
-		abc = PID.substring(0, 3);
-		String de = PID.substring(4, 6);
+		String abc = PID.substring(0, 3);
+		String e = PID.substring(5, 6);
 		String fghi = PID.substring(7, 11);
 		
-		int myAcct = Integer.parseInt(abc);
-		double myBal = Double.parseDouble(de+fghi)/100;
-				
-		// Creates your/my account within the array
-		if(answer==1) {
-			System.out.println("My account number is "+abc);
-			System.out.println("My account balance is: $"+myBal);
-		}
-		else {
-			System.out.println("Your account number is "+abc);
-			System.out.println("Your account balance is: $"+myBal);
+		int myNum = Integer.parseInt(abc);
+		double myBal = Double.parseDouble(e+fghi)/100;
+			
+		
+		
+		// If first 3 digits of the selected PID are greater than the number of accts
+		if(myNum>=accts.length) {
+			// Sets the last acct number within the array equal to the first 3 digits of the selected PID.
+			accts[accts.length-1].setID(myNum);
+			// Adds all the funds from the first account in the array to this account.
+			accts[accts.length-1].transferAll(accts[0]);
+			// Sets this account's balance to the last 5 digits of the selected PID.
+			accts[accts.length-1].setBalance(myBal);
+			System.out.println(accts[accts.length-1]);
 		}
 		
-		// If your acct number is greater than the max number within the array, replaces the last index,
-		// otherwise creates your account at the appropriate point in the array.
-		if(myAcct>=accts.length) accts[accts.length-1] = new PaypalAccount(myAcct, myBal);
-		else accts[myAcct-1] = new PaypalAccount(myAcct, myBal);
+		else {
+			// Adds all funds from the first account in the array to the the account who's
+			// account number matches the first 3 digits of the selected PID.
+			accts[myNum-1].transferAll(accts[0]);
+			// Sets this account's balance to the last 5 digits of the selected PID.
+			accts[myNum-1].setBalance(myBal);
+			System.out.println(accts[myNum-1]);
+		}
 		
 		// Initializing variables for calculation
 		double sum=0;
@@ -107,11 +116,7 @@ public class Bank {
 		int mini=0;
 		
 		for(int i=0;i<accts.length;i++) {
-			double balance = Math.random()*1000;
 			
-			// Creates a new account for each index of the array, except the one exists already
-			if (!(accts[i] instanceof PaypalAccount)) accts[i] = new PaypalAccount(balance);
-			else PaypalAccount.tally();
 			// Determines the maximum balance
 			if (max<accts[i].getBalance()) {
 				maxi = i;
@@ -140,7 +145,7 @@ public class Bank {
 		System.out.println();
 		System.out.println("The account with the largest balance:");
 		System.out.println(accts[maxi]);
-		if(accts[maxi].getID()==myAcct) System.out.println("Congratulations on having the highest account balance!");
+		if(accts[maxi].getID()==myNum) System.out.println("Congratulations on having the highest account balance!");
 		
 		// Prints the min
 		System.out.println();

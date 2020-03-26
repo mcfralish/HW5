@@ -5,6 +5,10 @@ public class StudentAdvance extends AdvanceTicket{
 		super(num, daysAhead);
 	}
 	
+	public String toString() {
+		return super.toString()+"\n(ID Required)";
+	}
+	
 	public int getPrice() {
 		return super.getPrice()/2;
 	}

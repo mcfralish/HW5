@@ -20,8 +20,8 @@ public class PaypalAccount {
 	
 	// Constructor for myAcct
 	public PaypalAccount(int myAcct, double myBalance) {
-		this.balance=myBalance;
-		this.accountID=myAcct;
+		balance=myBalance;
+		accountID=myAcct;
 	}
 	
 	// Formats and Prints
@@ -46,10 +46,16 @@ public class PaypalAccount {
 		this.balance=balance;
 	}
 	
-	// Tallies up the class variable 
-	public static void tally() {
-		IDs++;
+	// Setter for ID
+	public void setID(int num) {
+		accountID = num;
 	}
 	
+	// Transfer Funds
+	public void transferAll(PaypalAccount from) {
+		double amnt = from.getBalance();
+		this.balance += amnt;
+		from.setBalance(from.getBalance()-amnt);
+	}
 	
 }
